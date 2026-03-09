@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="APane1" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.pharma.controllers.AlmacenController">
+   <children>
+      <StackPane fx:id="SP1" accessibleRole="BUTTON" layoutX="143.0" layoutY="63.0" prefHeight="630.0" prefWidth="330.0" style="-fx-background-color: dodgerblue;">
+         <children>
+            <AnchorPane fx:id="PEliminar" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <ImageView fitHeight="630.0" fitWidth="330.0" opacity="0.25" pickOnBounds="true">
+                     <image>
+                        <Image url="@/images/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="LUsuarioEliminar" layoutX="58.0" layoutY="75.0" text="Ingresa el ID del producto:">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtIdEliminar" layoutX="64.0" layoutY="109.0" prefHeight="39.0" prefWidth="219.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="btnEliminarMedicamento" layoutX="90.0" layoutY="179.0" mnemonicParsing="false" onAction="#eliminarMedicamento" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="ELIMINAR PRODUCTO">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="PAgregar" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <ImageView fitHeight="630.0" fitWidth="330.0" opacity="0.25" pickOnBounds="true">
+                     <image>
+                        <Image url="@/images/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="LContraseña" layoutX="25.0" layoutY="164.0" text="Nombre">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="LRol" layoutX="25.0" layoutY="252.0" text="Compuesto">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="btnCrearMedicamento" layoutX="71.0" layoutY="532.0" mnemonicParsing="false" onAction="#crearMedicamento" prefHeight="50.0" prefWidth="195.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="REGISTRAR PRODUCTO">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Button>
+                  <TextField fx:id="txtNombre" layoutX="25.0" layoutY="188.0" prefHeight="37.0" prefWidth="287.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="txtCompuesto" layoutX="25.0" layoutY="276.0" prefHeight="37.0" prefWidth="287.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="txtPrecio" layoutX="25.0" layoutY="358.0" prefHeight="37.0" prefWidth="287.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="txtCantidad" layoutX="25.0" layoutY="440.0" prefHeight="37.0" prefWidth="287.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <Label fx:id="LRol1" layoutX="25.0" layoutY="334.0" text="Precio">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="LRol11" layoutX="25.0" layoutY="416.0" text="Cantidad">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="PModificar" prefHeight="406.0" prefWidth="308.0" visible="false">
+               <children>
+                  <ImageView fitHeight="630.0" fitWidth="330.0" opacity="0.25" pickOnBounds="true">
+                     <image>
+                        <Image url="@/images/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="btnMNombre" layoutX="233.0" layoutY="174.0" mnemonicParsing="false" onAction="#modificarNombre" prefHeight="35.0" prefWidth="74.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="ModificarNom">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Label layoutX="38.0" layoutY="144.0" text="Ingresa el nuevo nombre:">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="38.0" layoutY="232.0" text="Ingresa el nuevo compuesto:">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNuevoNombre" layoutX="38.0" layoutY="174.0" prefHeight="17.0" prefWidth="178.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="btnMCompuesto" layoutX="233.0" layoutY="264.0" mnemonicParsing="false" onAction="#modificarCompuesto" prefHeight="35.0" prefWidth="74.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="Modificarcompu">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Label layoutX="38.0" layoutY="50.0" text="Ingresa el ID del producto:">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtId" layoutX="38.0" layoutY="81.0" prefHeight="39.0" prefWidth="254.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="txtNuevoCompuesto" layoutX="38.0" layoutY="264.0" prefHeight="11.0" prefWidth="178.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <Label layoutX="38.0" layoutY="315.0" text="Ingresa el nuevo precio:">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNuevoPrecio" layoutX="38.0" layoutY="339.0" prefHeight="17.0" prefWidth="178.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="btnMPrecio" layoutX="233.0" layoutY="339.0" mnemonicParsing="false" onAction="#modificarPrecio" prefHeight="35.0" prefWidth="74.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="Modificarprecio">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Label layoutX="38.0" layoutY="394.0" text="Ingresa la nueva cantidad:">
+                     <font>
+                        <Font name="Arial Black" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNuevaCantidad" layoutX="38.0" layoutY="418.0" prefHeight="17.0" prefWidth="178.0" style="-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="btnMCantidad" layoutX="233.0" layoutY="418.0" mnemonicParsing="false" onAction="#modificarCantidad" prefHeight="35.0" prefWidth="74.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="Modificar">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
+      <Pane layoutX="141.0" layoutY="-4.0" prefHeight="66.0" prefWidth="858.0" style="-fx-background-color: lightskyblue;">
+         <children>
+            <Label fx:id="JL1" alignment="CENTER" layoutX="31.0" layoutY="8.0" prefHeight="49.0" prefWidth="589.0" text="ALMACEN" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial Black" size="26.0" />
+               </font>
+               <padding>
+                  <Insets left="180.0" top="10.0" />
+               </padding>
+            </Label>
+         </children>
+      </Pane>
+      <ListView fx:id="LV1" prefHeight="695.0" prefWidth="143.0" style="-fx-background-color: lightskyblue;" />
+      <ScrollPane layoutX="473.0" layoutY="63.0" prefHeight="632.0" prefWidth="527.0">
+         <content>
+            <TableView fx:id="tabla" prefHeight="630.0" prefWidth="536.0">
+                <columns>
+                    <TableColumn fx:id="columnaId" prefWidth="71.19997864961624" text="ID" />
+                    <TableColumn fx:id="columnaNombre" prefWidth="131.199951171875" text="Nombre" />
+                    <TableColumn fx:id="columnaCompuesto" prefWidth="123.20002746582031" text="Compuesto" />
+                    <TableColumn fx:id="columnaPrecio" prefWidth="99.2000732421875" text="Precio" />
+                  <TableColumn fx:id="columnaCantidad" prefWidth="93.599853515625" text="Cantidad" />
+                </columns>
+            </TableView>
+         </content>
+      </ScrollPane>
+      <Button fx:id="BAgregar" layoutX="12.0" layoutY="114.0" mnemonicParsing="false" onAction="#cambiarAgregar" prefHeight="35.0" prefWidth="111.0" style="-fx-background-color: dodgerblue; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="Registrar" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="BEliminar" layoutX="12.0" layoutY="171.0" mnemonicParsing="false" onAction="#cambiarEliminar" prefHeight="35.0" prefWidth="111.0" style="-fx-background-color: dodgerblue; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="Eliminar" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="BEditar" layoutX="12.0" layoutY="228.0" mnemonicParsing="false" onAction="#cambiarEditar" prefHeight="35.0" prefWidth="111.0" style="-fx-background-color: dodgerblue; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="Modificar" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="BRegreso" layoutX="37.0" layoutY="647.0" mnemonicParsing="false" onAction="#regreso" prefHeight="26.0" prefWidth="62.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);" text="Atrás">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

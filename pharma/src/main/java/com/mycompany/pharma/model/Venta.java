@@ -13,15 +13,6 @@ public class Venta {
     /** Identificador único de la venta */
     private int id;
 
-    /** Identificador del producto vendido */
-    private int productoId;
-
-    /** Cantidad de unidades vendidas */
-    private int cantidad;
-
-    /** Precio por unidad del producto */
-    private double precioUnidad;
-
     /** Total de la venta (cantidad * precioUnidad) */
     private double total;
 
@@ -41,18 +32,12 @@ public class Venta {
      * Constructor con todos los atributos de la venta.
      *
      * @param id Identificador único
-     * @param productoId Identificador del producto
-     * @param cantidad Cantidad de unidades vendidas
-     * @param precioUnidad Precio por unidad
      * @param total Total de la venta
      * @param fecha Fecha de la venta
      * @param estado Estado de la venta
      */
-    public Venta(int id, int productoId, int cantidad, double precioUnidad, double total, LocalDate fecha, String estado) {
+    public Venta(int id, double total, LocalDate fecha, String estado) {
         this.id = id;
-        this.productoId = productoId;
-        this.cantidad = cantidad;
-        this.precioUnidad = precioUnidad;
         this.total = total;
         this.fecha = fecha;
         this.estado = estado;
@@ -68,35 +53,6 @@ public class Venta {
         this.id = id;
     }
 
-    /** Obtiene el id del producto */
-    public int getProductoId() {
-        return productoId;
-    }
-
-    /** Establece el id del producto */
-    public void setProductoId(int productoId) {
-        this.productoId = productoId;
-    }
-
-    /** Obtiene la cantidad vendida */
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    /** Establece la cantidad vendida */
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    /** Obtiene el precio por unidad */
-    public double getPrecioUnidad() {
-        return precioUnidad;
-    }
-
-    /** Establece el precio por unidad */
-    public void setPrecioUnidad(double precioUnidad) {
-        this.precioUnidad = precioUnidad;
-    }
 
     /** Obtiene el total de la venta */
     public double getTotal() {
@@ -133,9 +89,6 @@ public class Venta {
     public String toString() {
         return "Venta{" +
                 "id=" + id +
-                ", productoId=" + productoId +
-                ", cantidad=" + cantidad +
-                ", precioUnidad=" + precioUnidad +
                 ", total=" + total +
                 ", fecha=" + fecha +
                 ", estado='" + estado + '\'' +

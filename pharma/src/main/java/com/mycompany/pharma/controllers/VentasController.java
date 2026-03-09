@@ -1,6 +1,7 @@
 package com.mycompany.pharma.controllers;
 
 
+import com.mycompany.pharma.model.DetalleVenta;
 import com.mycompany.pharma.model.Session;
 import com.mycompany.pharma.model.Venta;
 import java.io.File;
@@ -38,7 +39,16 @@ public class VentasController {
 
     @FXML
     private Button btnCancelar;
+    
+    @FXML
+    private Button btnEliminar;
 
+    @FXML 
+    private Button btnRegistrarVenta;
+    
+    @FXML 
+    private Button btnVerVenta;
+    
     @FXML
     private Button btnRegreso;
 
@@ -49,15 +59,6 @@ public class VentasController {
     private TableColumn<Venta, Integer> columnaId;
 
     @FXML
-    private TableColumn<Venta, Integer> columnaIdProducto;
-
-    @FXML
-    private TableColumn<Venta, Integer> columnaCantidad;
-
-    @FXML
-    private TableColumn<Venta, Double> columnaPrecio;
-
-    @FXML
     private TableColumn<Venta, Double> columnaTotal;
 
     @FXML
@@ -66,7 +67,10 @@ public class VentasController {
     @FXML
     private TableColumn<Venta, String> columnaEstado;
 
-
+    @FXML private TableView<DetalleVenta> tabla1;           
+    @FXML private TableColumn<DetalleVenta, Integer> columnaId1;  
+    @FXML private TableColumn<DetalleVenta, Integer> columnaEstado1; 
+    @FXML private TableColumn<DetalleVenta, Double> columnaTotal1;  
        
     /**
      * Inicializa el controlador.
@@ -78,16 +82,19 @@ public class VentasController {
         dbVenta = new SQLVenta();
 
         columnaId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        columnaIdProducto.setCellValueFactory(new PropertyValueFactory<>("productoId"));
-        columnaCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
-        columnaPrecio.setCellValueFactory(new PropertyValueFactory<>("precioUnidad"));
         columnaTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
         columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         columnaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
+        columnaId1.setCellValueFactory(new PropertyValueFactory<>("productoId"));
+        columnaEstado1.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        columnaTotal1.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
+        
         this.cargarDatos();
+
     }
 
+    
     @FXML
     private void agregarVenta() {
         try {
@@ -113,7 +120,20 @@ public class VentasController {
             this.mostrarAlerta(e.getMessage());
         }
     }
-
+    @FXML
+    private void verVenta(){
+        
+    }
+    @FXML
+    private void agregarProducto(){
+        
+    }
+    @FXML
+    private void eliminarVenta(){
+        
+    }
+    
+    
     @FXML
     private void cancelarVenta() {
         // Obtiene el item seleccionado
@@ -214,22 +234,22 @@ public class VentasController {
      * @param mensaje El mensaje que se mostrará en la alerta.
      */
     private void mostrarAlerta(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("AVISO");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        Stage stage = (Stage) this.txtIdProducto.getScene().getWindow();
-        alert.initOwner(stage); // Establecer como ventana padre
-        alert.showAndWait();
-    }
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("AVISO");
+    alert.setHeaderText(null);
+    alert.setContentText(mensaje);
+    alert.showAndWait(); // ← SIN initOwner
+}
 
     private void cargarDatos() {
         try {
             // 1. Obtener los medicamentos desde la BD
             List<Venta> ventas = this.dbVenta.cargarVentas();
+            List<DetalleVenta> detalles = this.dbVenta.cargarDetalles();
 
             // 3. Crear un ObservableList y asignarlo a la tabla
             tabla.setItems(FXCollections.observableArrayList(ventas));
+            tabla1.setItems(FXCollections.observableArrayList(detalles));
 
         } catch (Exception e) {
             this.mostrarAlerta("ERROR Carga de datos: " + e.getMessage());

@@ -1,5 +1,6 @@
 package lib;
 
+import com.mycompany.pharma.model.DetalleVenta;
 import com.mycompany.pharma.model.Venta;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -48,15 +49,12 @@ public class SQLVenta extends BaseSQL {
     // MÉTODO PARA CARGAR TODAS LAS VENTAS
     public ArrayList<Venta> cargarVentas() throws Exception {
         ArrayList<Venta> ventas = new ArrayList<>();
-        String query = "SELECT id_venta, producto_id, cantidad, precio_unidad, total, fecha, estado FROM venta";
+        String query = "SELECT id_venta, total, fecha, estado FROM venta";
 
         try (PreparedStatement stmt = connection.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 int id = rs.getInt("id_venta");
-                int idProducto = rs.getInt("producto_id");
-                int cantidad = rs.getInt("cantidad");
-                double precio = rs.getDouble("precio_unidad");
                 double total = rs.getDouble("total");
                 Date fechaBD = rs.getDate("fecha"); // java.sql.Date
                 boolean estadoBD = rs.getBoolean("estado"); // true o false desde la BD
@@ -64,7 +62,7 @@ public class SQLVenta extends BaseSQL {
                 LocalDate fecha = fechaBD.toLocalDate(); // convierte a LocalDate
                 String estado = estadoBD ? "Activa" : "Cancelada";
 
-                Venta venta = new Venta(id, idProducto, cantidad, precio, total, fecha, estado);
+                Venta venta = new Venta(id, total, fecha, estado);
                 ventas.add(venta);
             }
 
@@ -73,6 +71,30 @@ public class SQLVenta extends BaseSQL {
         }
 
         return ventas;
+    }
+    
+    public ArrayList<DetalleVenta> cargarDetalles() throws Exception {
+        ArrayList<DetalleVenta> detalles = new ArrayList<>();
+        String query = "SELECT id_medicamento, cantidad,subtotal FROM detalle_venta";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+
+                int id = rs.getInt("id_medicamento");
+                int cantidad = rs.getInt("cantidad");
+
+                double subtotal = rs.getDouble("subtotal");
+
+                DetalleVenta detalle = new DetalleVenta(id, cantidad,subtotal);
+                detalles.add(detalle);
+            
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error al cargar detalles: " + e.getMessage());
+        }
+
+        return detalles;
     }
 
 }

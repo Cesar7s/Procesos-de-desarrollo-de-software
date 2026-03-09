@@ -16,7 +16,7 @@ public class BaseSQL {
         if (this.connection == null) {
             try {
                 String url = "jdbc:mysql://localhost:3306/farmacia";
-                String user = "gerente";
+                String user = "gerente2";
                 String password = "1234";
 
                 connection = DriverManager.getConnection(url, user, password);
