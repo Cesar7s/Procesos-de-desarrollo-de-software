@@ -4,16 +4,6 @@ package com.mycompany.pharma.model;
  * La clase Usuario representa una entidad que contiene información sobre un usuario.
  * Esta clase incluye atributos como el identificador, nombre, contraseña y rol del usuario.
  * 
- * Atributos:
- * - id: Identificador único del usuario.
- * - nombre: Nombre del usuario.
- * - contraseña: Contraseña del usuario.
- * - rol: Rol o tipo de usuario (por ejemplo, administrador, usuario normal, etc.).
- * 
- * Métodos:
- * - Constructor: Inicializa una nueva instancia de la clase Usuario con los valores proporcionados.
- * - Getters: Métodos para obtener el valor de cada atributo.
- * - Setters: Métodos para modificar el valor de cada atributo (opcional, dependiendo de la lógica de la aplicación).
  */
 public class Usuario {
     private int id;

@@ -12,7 +12,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-
+/**
+ * FXML Controller class.
+ * Clase para mostrar el menu de Usuarios.
+ */
 public class MenuUserController {
     @FXML
     private Button btnVentas; // Botón para ingresar a Ventana Ventas
@@ -41,8 +44,10 @@ public class MenuUserController {
         String fxml = "ventas"; 
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
         
 
         // Obtener la ventana actual
@@ -62,8 +67,10 @@ public class MenuUserController {
         String fxml = "medicamentos";
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
 
         // Obtener la ventana actual
         Stage stage = (Stage) btnRegreso.getScene().getWindow();
@@ -77,14 +84,20 @@ public class MenuUserController {
 
     }
 
+    /**
+     * Permite regresar a la ventana anterior a esta.
+     * @throws IOException Si ocurre un erro en la lectura de los fxml.
+     */
     @FXML
     private void regreso() throws IOException {
         // Nombre del FXML de la ventana anterior
         String fxml = "login"; // Cambia esto al nombre de tu ventana anterior
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
 
         // Obtener la ventana actual
         Stage stage = (Stage) btnRegreso.getScene().getWindow();

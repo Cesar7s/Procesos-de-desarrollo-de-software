@@ -1,4 +1,3 @@
-
 package com.mycompany.pharma.model;
 
 
@@ -6,7 +5,6 @@ package com.mycompany.pharma.model;
  * Representa un medicamento con su información básica.
  * Incluye identificador, nombre, compuesto activo, precio y cantidad disponible.
  * 
- * @author Angel
  */
 public class Medicamento {
 

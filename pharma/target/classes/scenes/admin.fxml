@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="363.0" prefWidth="554.0" style="-fx-background-color: #badeea;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.pharma.controllers.MenuAdminController">
+   <children>
+      <Label layoutX="163.0" layoutY="23.0" prefHeight="27.0" prefWidth="123.0" style="-fx-background-color: #208acb;" text="BIENVENID@" textAlignment="CENTER">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="133.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@/images/logo.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="etUsuario" layoutX="323.0" layoutY="23.0" prefHeight="27.0" prefWidth="172.0" style="-fx-background-color: #208acb;">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnUsuarios" layoutX="81.0" layoutY="251.0" mnemonicParsing="false" onAction="#switchUsuarios" prefHeight="35.0" prefWidth="130.0" style="-fx-background-radius: 12; -fx-background-color: #208acb;" text="Usuarios">
+         <font>
+            <Font name="Bodoni MT" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnAlmacen" layoutX="378.0" layoutY="251.0" mnemonicParsing="false" onAction="#switchAlmacen" prefHeight="35.0" prefWidth="140.0" style="-fx-background-radius: 12; -fx-background-color: #208acb;" text="Almacen">
+         <font>
+            <Font name="Bodoni MT" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnVentas" layoutX="231.0" layoutY="251.0" mnemonicParsing="false" onAction="#switchVentas" prefHeight="35.0" prefWidth="130.0" style="-fx-background-radius: 12; -fx-background-color: #208acb;" text="Ventas">
+         <font>
+            <Font name="Bodoni MT" size="18.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="100.0" fitWidth="117.0" layoutX="88.0" layoutY="143.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@/images/usuarios.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="108.0" fitWidth="130.0" layoutX="230.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true">
+          <image>
+              <Image url="@/images/carro.png" />
+          </image>
+      </ImageView>
+      <ImageView fitHeight="108.0" fitWidth="140.0" layoutX="378.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true">
+          <image>
+              <Image url="@/images/farmaco.png" />
+          </image>
+      </ImageView>
+      <Button fx:id="btnRegreso" layoutX="14.0" layoutY="293.0" mnemonicParsing="false" onAction="#regreso" prefHeight="55.0" prefWidth="73.0" style="-fx-background-radius: 12;">
+          <graphic>
+              <ImageView fitHeight="40" fitWidth="40">
+                  <image>
+                      <Image url="@/images/regreso.png" />
+                  </image>
+              </ImageView>
+          </graphic>
+      </Button>
+   </children>
+</AnchorPane>

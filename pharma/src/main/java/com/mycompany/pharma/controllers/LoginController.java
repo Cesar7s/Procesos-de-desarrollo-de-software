@@ -15,9 +15,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lib.SQLUser;
 
+
 /**
- *
- * @author amiss
+ * FXML Controller class.
+ * Clase para manejar el Logueo de usuarios.
  */
 public class LoginController {
     @FXML
@@ -93,9 +94,9 @@ public class LoginController {
         alert.setTitle("Campos incompletos");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
-        Stage stage = (Stage) txtUsuario.getScene().getWindow();
+        Stage stage = (Stage) txtUsuario.getScene().getWindow();//Obtener la ventana
         alert.initOwner(stage); // Establecer como ventana padre
-        alert.showAndWait();
+        alert.showAndWait();//No continua el programa si el usuario no da click en aceptar.
     }
 
     /**
@@ -115,20 +116,21 @@ public class LoginController {
         if (!fxml.equals("admin") && !fxml.equals("user")) {
             return;
         }
-
+        //Actualiza los datos de ingreso en las variables estaticas
         Session.setNombre(txtUsuario.getText().trim());
         Session.setRol(fxml);
         
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        FXMLLoader loader = new FXMLLoader(fxmlFile.toURI().toURL());
+        // Cargar el archivo FXML desde recursos
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
         Parent root = loader.load();
+        
         Stage stage = (Stage) txtUsuario.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.sizeToScene();
         stage.setResizable(false);
-        
-        
         
     }
     

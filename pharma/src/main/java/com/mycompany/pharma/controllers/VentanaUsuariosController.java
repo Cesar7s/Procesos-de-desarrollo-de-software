@@ -7,12 +7,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
-import static javafx.collections.FXCollections.observableArrayList;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -25,11 +22,10 @@ import javafx.stage.Stage;
 import lib.SQLUser;
 
 /**
- * FXML Controller class
- *
- * @author aburt
+ * FXML Controller class.
+ * Clase para manejar la administracion de usuarios.
  */
-public class VentanaUsuariosController implements Initializable {
+public class VentanaUsuariosController {
     
     // TABLA
     @FXML
@@ -63,8 +59,14 @@ public class VentanaUsuariosController implements Initializable {
 
     private SQLUser dbUser;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    /**
+     * Inicializa el controlador.
+     * Aqui se inicializan las propiedades de la tabla 
+     * para una mejor manipulacion.
+     *
+     */
+    @FXML
+    public void initialize() {
         ColumnaID.setCellValueFactory(new PropertyValueFactory<>("id"));
         ColumnaNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         ColumnaContrasena.setCellValueFactory(new PropertyValueFactory<>("contrasena"));
@@ -75,63 +77,73 @@ public class VentanaUsuariosController implements Initializable {
         this.cargarDatos();
     }
 
-    //Primero se selecciona en la tabla el coso a eliminar y luego se presiona el Botón
+    /**
+     * Metodo que se activa cuando se hace click en el boton de eliminar.
+     */
     @FXML
-    private void eliminarUsuario(ActionEvent event) {
+    private void eliminarUsuario() {
         Usuario selectedItem = TablaUsuarios.getSelectionModel().getSelectedItem();
         //En la lista de usuarios que se elimine aquel cuya id corresponda con la ID de selectedItem
         try {
             if (selectedItem != null) {
                 Integer id = selectedItem.getId();
-                if (this.dbUser.removeUser(id)) {
-                    
+                //Eliminar en la BD
+                if (this.dbUser.removeUser(id)) {//Si se elimino correctamente
+                    //Actualizar datos en la tabla desde la BD
                     this.cargarDatos();
                     this.mostrarAlerta("ELIMINADO CORRECTAMENTE");
-                } else {
+                } else {//Si no se elimino correctamente
                     this.mostrarAlerta("No se pudo eliminar");
                 }
 
-            } else {
+            } else {//Si no hay elemento seleccionado en la tabla
                 this.mostrarAlerta("Selecciona algun elemento en la Tabla");
             }
-        } catch (Exception e) {
+        } catch (Exception e) {//Si ocurre alguna excepcion.
             mostrarAlerta("Error" + e.getMessage());
         }
 
     }
 
+    /**
+     * Metodo que se activa cuando se hace click en el boton de ingresar.
+     */
     @FXML
     private void ingresarUsuario() {
+        //Valida los campos de texto no esten vacios
         if (!entradaNombre.getText().isBlank()
                 && !entradaContrasena.getText().isBlank()
                 && !entradaRol.getText().isBlank()) {
             try {
+                //Almacena los datos en variables
                 String nombre = entradaNombre.getText().trim();
                 String contrasena = entradaContrasena.getText().trim();
                 String rol = entradaRol.getText().trim();
-
+                //Verifica un rol valido
                 if (rol.equals("admin") || rol.equals("user")) {
-                    if (this.dbUser.createUser(rol, nombre, contrasena)) {
+                    if (this.dbUser.createUser(rol, nombre, contrasena)) {//Lo registra en la BD
+                        //Si se agrego correctamente
                         this.mostrarAlerta("Creado Exitosamente");
-
-                        this.cargarDatos();
                         
+                        //Actualizar datos en la tabla desde la BD
+                        this.cargarDatos();
+                        //Limpia los campos de ingreso
                         entradaNombre.clear();
                         entradaContrasena.clear();
                         entradaRol.clear();
-                    } else {
+                    } else {//Si no se creo correctamente
                         this.mostrarAlerta("ERROR de creacion");
                     }
 
-                } else {
+                } else {//Si no se ingresa un rol valido
                     this.mostrarAlerta("Ingresa un Rol Válido (admin/user)");
                     //Si quieres esto hazlo un mensaje popup
                 }
-            } catch (Exception e) {
+            } catch (Exception e) {//Si ocurre alguna excepcion
                 this.mostrarAlerta("ERROR-- " + e.getMessage());
                 //Si quieres esto hazlo un mensaje popup
             }
-        } else {
+        } else {//Si algun campo esta vacio
             this.mostrarAlerta("Los campos no pueden estar vacíos");
         }
     }
@@ -141,48 +153,56 @@ public class VentanaUsuariosController implements Initializable {
     //El usuario a modificar y se presiona el botón
     @FXML
     private void modificarUsuario() {
-
+        //Se obtiene el elemeto seleccionado
         Usuario selectedItem = TablaUsuarios.getSelectionModel().getSelectedItem();
 
+        //Si no hay elemento seleccionado en la tabla
         if (selectedItem == null) {
             mostrarAlerta("Selecciona algún elemento en la tabla");
             return;
         }
-
+        //Obtiene el id del elemento a modificar
         Integer id = selectedItem.getId();
 
         try {
-
-            if (!entradaNombre.getText().isBlank()) {
+            //Verifica si hay algun valor en el campo nombre
+            if (!entradaNombre.getText().isBlank()) {//Actualiza el nombre con el valor en la BD
                 if (dbUser.setUsername(id, entradaNombre.getText().trim())) {
+                    //Si se actualizo correctamente
                     mostrarAlerta("NOMBRE ACTUALIZADO");
                 }
             }
 
-            if (!entradaContrasena.getText().isBlank()) {
+            //Verifica si hay algun valor en el contrasena
+            if (!entradaContrasena.getText().isBlank()) {//Actualiza la contrasena con el valor en la BD
                 if (dbUser.setUserPassword(id, entradaContrasena.getText().trim())) {
                     mostrarAlerta("CONTRASEÑA ACTUALIZADA");
                 }
             }
 
+            //Verifica si hay algun valor en el campo rol
             if (!entradaRol.getText().isBlank()) {
 
+                //Convierte a minusculas
                 String rol = entradaRol.getText().trim().toLowerCase();
 
+                //Verifica el rol sea valido
                 if (rol.equals("admin") || rol.equals("user")) {
 
-                    if (dbUser.setRol(id, rol)) {
+                    if (dbUser.setRol(id, rol)) { //Actualiza el rol con el valor en la BD
                         mostrarAlerta("ROL ACTUALIZADO");
                     }
 
-                } else {
+                } else {//Si no hay un rol valido
                     mostrarAlerta("Escriba un rol válido (admin/user)");
                     return;
                 }
             }
 
-            cargarDatos();
+            //Actualizar datos en la tabla desde la BD
+            this.cargarDatos();
 
+            //Limpia los campos de ingreso.
             entradaNombre.clear();
             entradaContrasena.clear();
             entradaRol.clear();
@@ -192,14 +212,20 @@ public class VentanaUsuariosController implements Initializable {
         }
     }
 
+    /**
+     * Permite regresar a la ventana anterior a esta.
+     * @throws IOException Si ocurre un erro en la lectura de los fxml.
+     */
     @FXML
     private void salir(ActionEvent event) throws IOException {
         // Nombre del FXML de la ventana anterior
         String fxml = "admin";
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
 
         // Obtener la ventana actual
         Stage stage = (Stage) botonSalir.getScene().getWindow();
@@ -227,6 +253,9 @@ public class VentanaUsuariosController implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * Carga los usuarios desde la BD a la tabla.
+     */
     private void cargarDatos() {
         try {
             // 1. Obtener los usuarios desde la BD
@@ -235,8 +264,9 @@ public class VentanaUsuariosController implements Initializable {
             // 3. Crear un ObservableList y asignarlo a la tabla
             TablaUsuarios.setItems(FXCollections.observableArrayList(usuarios));
 
-        } catch (Exception e) {
+        } catch (Exception e) {//Si ocurre alguna excepcion.
             this.mostrarAlerta("ERROR Carga de datos: " + e.getMessage());
         }
     }
+
 }

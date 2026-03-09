@@ -19,6 +19,10 @@ import javafx.stage.Stage;
 import lib.SQLMedicamento;
 import lib.SQLUser;
 
+/**
+ * FXML Controller class.
+ * Clase para manejar el control de medicamentos.
+ */
 public class AlmacenController {
     
     //Conexión a la base de datos
@@ -77,11 +81,12 @@ public class AlmacenController {
     
     /**
      * Inicializa el controlador.
+     * Aqui se inicializan las propiedades de la tabla 
+     * para una mejor manipulacion.
      *
-     * @throws SQLException Si ocurre un error al conectar con la base de datos.
      */
     @FXML
-    private void initialize() throws SQLException {
+    private void initialize() {
         dbMedicamento = new SQLMedicamento();
         
         columnaId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -96,6 +101,10 @@ public class AlmacenController {
     // =======================
     // MÉTODOS DE PANEL
     // =======================
+    
+    /**
+     * Cambia a el panel para agregar medicamentos.
+     */
     @FXML
     private void cambiarAgregar() {
         PAgregar.setVisible(true);
@@ -103,6 +112,9 @@ public class AlmacenController {
         PModificar.setVisible(false);
     }
 
+    /**
+     * Cambia a el panel para eliminar medicamentos.
+     */
     @FXML
     private void cambiarEliminar() {
         PAgregar.setVisible(false);
@@ -110,6 +122,9 @@ public class AlmacenController {
         PModificar.setVisible(false);
     }
 
+    /**
+     * Cambia a el panel para editar medicamentos.
+     */
     @FXML
     private void cambiarEditar() {
         PAgregar.setVisible(false);
@@ -117,14 +132,18 @@ public class AlmacenController {
         PModificar.setVisible(true);
     }
 
+    /**
+     * Permite regresar a la ventana anterior a esta.
+     * @throws IOException Si ocurre un erro en la lectura de los fxml.
+     */
     @FXML
     private void regreso() throws IOException {
-        // Nombre del FXML de la ventana anterior
-        String fxml = "admin"; 
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/admin.fxml")
+        );
+        Parent root = loader.load();
 
         // Obtener la ventana actual
         Stage stage = (Stage) BRegreso.getScene().getWindow();
@@ -140,68 +159,92 @@ public class AlmacenController {
     // =======================
     // MÉTODOS CRUD
     // =======================
+    
+    /**
+     * Metodo que se activa cuando se hace click en el boton de agregar.
+     */
     @FXML
     private void crearMedicamento() {
-        try {
+        try {//Verifica los campos de ingreso
             if (!this.validarCamposIngreso()) {
+                //Si alguno esta vacio
                 throw new Exception("Todos los campos deben estar llenos");
             }
             
+            //Almacena los datos en variables
             String nombre = txtNombre.getText();
             String compuesto = txtCompuesto.getText();
             String precio = txtPrecio.getText();
             String cantidad = txtCantidad.getText();
             
+            //Valida que los datos numericos sean consistentes
             Double precioNum = this.validarNumeroPositivoDouble(precio);
             Integer cantidadNum = this.validarNumeroPositivoEntero(cantidad);
             
+            //Se almacenan los datos como un nuevo medicamento
             if(this.dbMedicamento.agregarMedicamento(nombre, compuesto, precioNum, cantidadNum)){
+                //Si se agrego correctamente
                 this.mostrarAlerta( "Medicamento agregada correctamente");
-                
+                //Limpia los campos de ingreso de datos
                 txtNombre.setText("");
                 txtCompuesto.setText("");
                 txtPrecio.setText("");
                 txtCantidad.setText("");
-                
+                //Carga los datos de la BD en la tabla
                 this.cargarDatos();
-            } else {
+            } else {//Si no se agrego correctamente
                 this.mostrarAlerta( "ERROR- No se pudo agregar");
             }
-        } catch (Exception e) {
+        } catch (Exception e) { //Si ocurre alguna excepcion.
             this.mostrarAlerta(e.getMessage());
         }
     }
 
+    /**
+     * Metodo que se activa cuando se hace click en el boton de eliminar.
+     */
     @FXML
     private void eliminarMedicamento() {
+        //Almacena el dato en variable
         String id = txtIdEliminar.getText().trim();
         
+        //Verifica que no este vacio el campo de Id
         if(id.isBlank()){
             this.mostrarAlerta("Ingrese un valor en el campo");
         }
 
-        try {
+        try {//Intenta convertir el String a un Integer
             Integer idNum = this.validarNumeroPositivoEntero(id);
 
+            //Se elimina el medicamento en la BD
             if (this.dbMedicamento.eliminarMedicamento(idNum)) {
-
+                //Si se elimino correctamente
                 this.mostrarAlerta("Eliminado correctamente");
+                
+                //Limpia el campo de texto
                 txtIdEliminar.setText("");
                 
+                //Carga los nuevos datos de la BD en la tabla
                 this.cargarDatos();
             } else {
+                //Si no se elimino correctamente
                 this.mostrarAlerta("ERROR- No se pudo eliminar");
             }
-        } catch (Exception e) {
+        } catch (Exception e) {//Si ocurre alguna excepcion
             this.mostrarAlerta(e.getMessage());
         }
     }
 
+    /**
+     * Metodo que se activa cuando se hace click en el boton de modificar para nombre.
+     */
     @FXML
     private void modificarNombre() {
+        //Almacena los datos de los campos en variables
         String id = txtId.getText().trim();
         String nuevoNombre = txtNuevoNombre.getText().trim();
 
+        //Verifica que ambos no esten vacios
         if(id.isBlank()){
             this.mostrarAlerta("Ingrese un valor en el campo Id");
         }
@@ -209,30 +252,36 @@ public class AlmacenController {
             this.mostrarAlerta("Ingrese un valor en el campo Nombre");
         }
 
-        try {
+        try {//Intenta convertir el String a un Integer
             Integer idNum = this.validarNumeroPositivoEntero(id);
 
+            //Se modifica el nombre en la BD
             if (this.dbMedicamento.cambiarNombre(idNum, nuevoNombre)) {
-
+                //Si si se modifico correctamente
                 this.mostrarAlerta("Modificado correctamente");
-                
+                //Limpia los campos
                 txtIdEliminar.setText("");
                 this.txtNuevoNombre.setText("");
-                
+                //Actualiza los datos de la tabla con la nueva info en la BD
                 this.cargarDatos();
-            } else {
+            } else {//Si no se modifico correctamente
                 this.mostrarAlerta("ERROR- No se pudo modificar");
             }
-        } catch (Exception e) {
+        } catch (Exception e) {//Si ocurre alguna excepcion
             this.mostrarAlerta(e.getMessage());
         }
     }
 
+    /**
+     * Metodo que se activa cuando se hace click en el boton de modificar para compuesto.
+     */
     @FXML
     private void modificarCompuesto() {
+        //Almacena los datos de los campos en variables
         String id = txtId.getText().trim();
         String nuevoCompuesto = txtNuevoCompuesto.getText().trim();
 
+        //Verifica que ambos no esten vacios
         if(id.isBlank()){
             this.mostrarAlerta("Ingrese un valor en el campo Id");
         }
@@ -240,30 +289,35 @@ public class AlmacenController {
             this.mostrarAlerta("Ingrese un valor en el campo Compuesto");
         }
 
-        try {
+        try {//Intenta convertir el String a un Integer
             Integer idNum = this.validarNumeroPositivoEntero(id);
 
+            //Se modifica el compuesto en la BD
             if (this.dbMedicamento.cambiarCompuesto(idNum, nuevoCompuesto)) {
-
+                //Si si se modifico correctamente
                 this.mostrarAlerta("Modificado correctamente");
-                
+                //Limpia los campos
                 txtIdEliminar.setText("");
                 this.txtNuevoCompuesto.setText("");
-                
+                //Actualiza los datos de la tabla con la nueva info en la BD
                 this.cargarDatos();
-            } else {
+            } else {//Si no se modifico correctamente
                 this.mostrarAlerta("ERROR- No se pudo modificar");
             }
-        } catch (Exception e) {
+        } catch (Exception e) {//Si ocurre alguna excepcion
             this.mostrarAlerta(e.getMessage());
         }
     }
 
+    /**
+     * Metodo que se activa cuando se hace click en el boton de modificar para precio.
+     */
     @FXML
     private void modificarPrecio() {
+        //Almacena los datos de los campos en variables
         String id = txtId.getText().trim();
         String nuevoPrecio = txtNuevoPrecio.getText().trim();
-
+        //Verifica que ambos no esten vacios
         if(id.isBlank()){
             this.mostrarAlerta("Ingrese un valor en el campo Id");
         }
@@ -271,31 +325,36 @@ public class AlmacenController {
             this.mostrarAlerta("Ingrese un valor en el campo Precio");
         }
 
-        try {
+        try {//Intenta convertir los String a Integer y Double respectivamente
             Integer idNum = this.validarNumeroPositivoEntero(id);
             Double precioNum = this.validarNumeroPositivoDouble(nuevoPrecio);
-
+            //Se modifica el precio en la BD
             if (this.dbMedicamento.cambiarPrecio(idNum, precioNum)) {
-
+                //Si no se modifico correctamente
                 this.mostrarAlerta("Modificado correctamente");
-                
+                //Limpia los campos
                 txtIdEliminar.setText("");
                 this.txtNuevoPrecio.setText("");
-                
+                //Actualiza los datos de la tabla con la nueva info en la BD
                 this.cargarDatos();
-            } else {
+            } else {//Si no se modifico correctamente
                 this.mostrarAlerta("ERROR- No se pudo modificar");
             }
-        } catch (Exception e) {
+        } catch (Exception e) {//Si ocurre alguna excepcion
             this.mostrarAlerta(e.getMessage());
         }
     }
 
+    /**
+     * Metodo que se activa cuando se hace click en el boton de modificar para cantidad/Stock.
+     */
     @FXML
     private void modificarCantidad() {
+        //Almacena los datos de los campos en variables
         String id = txtId.getText().trim();
         String nuevaCantidad = txtNuevaCantidad.getText().trim();
 
+        //Verifica que ambos no esten vacios
         if(id.isBlank()){
             this.mostrarAlerta("Ingrese un valor en el campo Id");
         }
@@ -303,22 +362,23 @@ public class AlmacenController {
             this.mostrarAlerta("Ingrese un valor en el campo Cantidad");
         }
 
-        try {
+        try {//Intenta convertir los String a Integer y Double respectivamente
             Integer idNum = this.validarNumeroPositivoEntero(id);
             Integer cantidadNum = this.validarNumeroPositivoEntero(nuevaCantidad);
 
+            //Se modifica la cantidad/Stock en la BD
             if (this.dbMedicamento.cambiarCantidad(idNum, cantidadNum)) {
-
+                //Si si se modifico correctamente
                 this.mostrarAlerta("Modificado correctamente");
-                
+                //Limpia los campos
                 txtIdEliminar.setText("");
                 this.txtNuevaCantidad.setText("");
-                
+                //Actualiza los datos de la tabla con la nueva info en la BD
                 this.cargarDatos();
-            } else {
+            } else {//Si no se modifico correctamente
                 this.mostrarAlerta("ERROR- No se pudo modificar");
             }
-        } catch (Exception e) {
+        } catch (Exception e) {//Si ocurre alguna excepcion
             this.mostrarAlerta(e.getMessage());
         }
     }
@@ -345,9 +405,6 @@ public class AlmacenController {
      * Convierte un texto en un número de tipo Double y verifica que sea
      * positivo.
      * Lanza excepciones específicas según el tipo de error:
-     * 
-     * NumberFormatException si el texto no es un número válido.
-     * IllegalArgumentException si el número es menor o igual a cero.
      *
      * @param texto El texto que se desea validar y convertir.
      * @return El valor numérico convertido a Double si es mayor que cero.
@@ -358,11 +415,11 @@ public class AlmacenController {
         double valor;
         try {
             valor = Double.parseDouble(texto.trim());
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {//Si el texto no es un número válido
             throw new NumberFormatException("Ingrese un número válido");
         }
 
-        if (valor <= 0) {
+        if (valor <= 0) {//Si el número es menor o igual a cero
             throw new IllegalArgumentException("El número debe ser mayor que cero");
         }
 
@@ -374,9 +431,6 @@ public class AlmacenController {
      * Convierte un texto en un número de tipo Entero y verifica que sea
      * positivo.
      * Lanza excepciones específicas según el tipo de error:
-     * 
-     * NumberFormatException si el texto no es un número válido.
-     * IllegalArgumentException si el número es menor o igual a cero.
      *
      * @param texto El texto que se desea validar y convertir.
      * @return El valor numérico convertido a Entero si es mayor que cero.
@@ -387,11 +441,11 @@ public class AlmacenController {
         Integer valor;
         try {
             valor = Integer.parseInt(texto.trim());
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {//Si el texto no es un número válido
             throw new NumberFormatException("Ingrese un número válido");
         }
 
-        if (valor <= 0) {
+        if (valor <= 0) {//Si el número es menor o igual a cero
             throw new IllegalArgumentException("El número debe ser mayor que cero");
         }
 
@@ -406,15 +460,17 @@ public class AlmacenController {
      */
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("EVISO");
+        alert.setTitle("AVISO");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
-        Stage stage = (Stage) this.txtNombre.getScene().getWindow();
+        Stage stage = (Stage) this.txtNombre.getScene().getWindow();//Obtener la ventana
         alert.initOwner(stage); // Establecer como ventana padre
-        alert.showAndWait();
+        alert.showAndWait();//No continua el programa si el usuario no da click en aceptar.
     }
     
-    
+    /**
+     * Carga los medicamentos desde la BD a la tabla.
+     */
     private void cargarDatos() {
         try {
             // 1. Obtener los medicamentos desde la BD
@@ -423,7 +479,7 @@ public class AlmacenController {
             // 3. Crear un ObservableList y asignarlo a la tabla
             tabla.setItems(FXCollections.observableArrayList(medicamentos));
 
-        } catch (Exception e) {
+        } catch (Exception e) {//Si ocurre alguna excepcion
             this.mostrarAlerta("ERROR Carga de datos: " + e.getMessage());
         }
     }

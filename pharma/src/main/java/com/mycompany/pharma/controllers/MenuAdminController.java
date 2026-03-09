@@ -11,7 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-
+/**
+ * FXML Controller class.
+ * Clase para mostrar el menu de Admin.
+ */
 public class MenuAdminController {
     
     @FXML
@@ -32,21 +35,26 @@ public class MenuAdminController {
 
     /**
      * Inicializa el controlador.
-     *
      */
     @FXML
     private void initialize() {
         this.setNombreEtiqueta(Session.getNombre());
     }
     
+    /**
+     * Cambia a la ventana de usuarios.
+     * @throws IOException Si ocurre alguna excepcion en la lectura del fxml.
+     */
     @FXML
     private void switchUsuarios() throws IOException {
         // Nombre del FXML de la ventana nueva
         String fxml = "usuarios"; 
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
         
 
         // Obtener la ventana actual
@@ -60,14 +68,20 @@ public class MenuAdminController {
         stage.show();
     }
 
+    /**
+     * Cambia a la ventana de ventas.
+     * @throws IOException Si ocurre alguna excepcion en la lectura del fxml.
+     */
     @FXML
     private void switchVentas() throws IOException {
         // Nombre del FXML nuevo
         String fxml = "ventas"; 
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
         
 
         // Obtener la ventana actual
@@ -81,14 +95,20 @@ public class MenuAdminController {
         stage.show();
     }
 
+    /**
+     * Cambia a la ventana de Almacen.
+     * @throws IOException Si ocurre alguna excepcion en la lectura del fxml.
+     */
     @FXML
     private void switchAlmacen() throws IOException{
         // Nombre del FXML de la ventana nueva
         String fxml = "almacen"; 
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
         
 
         // Obtener la ventana actual
@@ -102,14 +122,20 @@ public class MenuAdminController {
         stage.show();
     }
 
+    /**
+     * Permite regresar a la ventana anterior a esta.
+     * @throws IOException Si ocurre un erro en la lectura de los fxml.
+     */
     @FXML
     private void regreso() throws IOException {
         // Nombre del FXML de la ventana anterior
         String fxml = "login"; 
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
 
         // Obtener la ventana actual
         Stage stage = (Stage) btnRegreso.getScene().getWindow();

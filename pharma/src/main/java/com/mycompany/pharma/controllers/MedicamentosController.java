@@ -20,7 +20,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import lib.SQLMedicamento;
 
-
+/**
+ * FXML Controller class.
+ * Clase para mostrar los medicamentos.
+ */
 public class MedicamentosController {
     
 //Conexión a la base de datos
@@ -64,16 +67,20 @@ public class MedicamentosController {
         this.cargarDatos();
     }
 
-
-
+    /**
+     * Permite regresar a la ventana anterior a esta.
+     * @throws IOException Si ocurre un erro en la lectura de los fxml.
+     */
     @FXML
     private void regreso() throws IOException {
         // Nombre del FXML de la ventana anterior
         String fxml = Session.getRol(); 
 
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
 
         // Obtener la ventana actual
         Stage stage = (Stage) this.tabla.getScene().getWindow();
@@ -104,7 +111,9 @@ public class MedicamentosController {
         alert.showAndWait();
     }
     
-    
+    /**
+     * Carga los medicamentos desde la BD a la tabla.
+     */
     private void cargarDatos() {
         try {
             // 1. Obtener los medicamentos desde la BD
@@ -113,7 +122,7 @@ public class MedicamentosController {
             // 3. Crear un ObservableList y asignarlo a la tabla
             tabla.setItems(FXCollections.observableArrayList(medicamentos));
 
-        } catch (Exception e) {
+        } catch (Exception e) {//Si ocurre alguna excepcion
             this.mostrarAlerta("ERROR Carga de datos: " + e.getMessage());
         }
     }

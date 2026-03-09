@@ -7,8 +7,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+
+/**
+ * Clase para aceder y manipular toda la informacion alamcenada en la BD 
+ * con respecto a los usuarios.
+ */
 public class SQLUser extends BaseSQL {
 
+    /**
+     * Constructor de la clase
+     */
     public SQLUser() {
     }
     
@@ -20,6 +28,7 @@ public class SQLUser extends BaseSQL {
      * @param password La contraseña del usuario.
      * @return true si el usuario se creó correctamente, false en caso
      * contrario.
+     * @throws Exception Si ocurre un error al ejecutar el procedimiento.
      */
     public boolean createUser(String role, String username, String password) throws Exception {
         String query = "{ CALL AgregarUsuario(?, ?, ?) }";
@@ -70,6 +79,7 @@ public class SQLUser extends BaseSQL {
      * @param id El ID del usuario a eliminar.
      * @return true si el usuario se eliminó correctamente, false en caso
      * contrario.
+     * @throws Exception Si ocurre un error al ejecutar el procedimiento.
      */
     public boolean removeUser(int id) throws Exception {
         String query = "{ CALL EliminarUsuario(?) }";
@@ -88,8 +98,9 @@ public class SQLUser extends BaseSQL {
      *
      * @param id El ID del usuario.
      * @param username El nuevo nombre de usuario.
-     * @return true si el nombre de usuario se cambió correctamente, false en
+     * @return true si el nombre de usuario se modifico correctamente, false en
      * caso contrario.
+     * @throws Exception Si ocurre un error al ejecutar el procedimiento.
      */
     public boolean setUsername(int id, String username) throws Exception {
         String query = "{ CALL CambiarNombreUsuario(?, ?) }";
@@ -112,6 +123,7 @@ public class SQLUser extends BaseSQL {
      * @param password La nueva contraseña.
      * @return true si la contraseña se cambió correctamente, false en caso
      * contrario.
+     * @throws Exception Si ocurre un error al ejecutar el procedimiento.
      */
     public boolean setUserPassword(int id, String password) throws Exception {
         String query = "{ CALL CambiarContrasenaUsuario(?, ?) }";
@@ -126,7 +138,7 @@ public class SQLUser extends BaseSQL {
     }
 
     /**
-     * Obtiene el rol de un usuario.
+     * Obtiene el rol de un usuario usando su nombre.
      *
      * @param username El nombre de usuario.
      * @return El rol del usuario, o "nar" si no se encuentra el usuario.
@@ -155,6 +167,7 @@ public class SQLUser extends BaseSQL {
      * @param rol El nuevo rol.
      * @return true si el rol se cambió correctamente, false en caso
      * contrario.
+     * @throws Exception Si ocurre un error al ejecutar el procedimiento.
      */
     public boolean setRol(int id, String rol) throws Exception {
         String query = "{ CALL cambiarRolUsuario(?, ?) }";
@@ -167,9 +180,13 @@ public class SQLUser extends BaseSQL {
             throw new Exception("Error: " + e.getMessage());
         }
     }
-
-
-// MÉTODO PARA CARGAR TODOS LOS USUARIOS
+    
+    
+    /**
+     * Obtiene un Arraylist con todos los usuarios en estado activo.
+     * @return la lista de usuarios.
+     * @throws Exception Si ocurre un error al ejecutar la consulta.
+     */
     public ArrayList<Usuario> obtenerUsuarios() throws Exception {
         ArrayList<Usuario> usuarios = new ArrayList<>();
         String query = "SELECT id_usuario, nombre, contrasena, rol FROM usuario WHERE estado = TRUE";

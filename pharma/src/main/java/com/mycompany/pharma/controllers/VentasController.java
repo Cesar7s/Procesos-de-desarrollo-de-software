@@ -1,238 +1,276 @@
 package com.mycompany.pharma.controllers;
 
-
 import com.mycompany.pharma.model.Session;
 import com.mycompany.pharma.model.Venta;
+import com.mycompany.pharma.model.DetalleV;
+
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lib.SQLVenta;
 
-
+/**
+ * Controlador de la ventana Ventas.
+ */
 public class VentasController {
-    
-    //Conexión a la base de datos
+
     private SQLVenta dbVenta;
 
-    @FXML
-    private TextField txtIdProducto;
+    // =========================
+    // CAMPOS PRODUCTOS
+    // =========================
+    @FXML private TextField txtIdProducto;
+    @FXML private TextField txtCantidad;
+
+    @FXML private Button btnAgregarProd;
+    @FXML private Button btnEliminarProd;
+
+    // =========================
+    // TABLA VENTAS
+    // =========================
+    @FXML private TableView<Venta> tablaVentas;
+    @FXML private TableColumn<Venta, Integer> columnaId;
+    @FXML private TableColumn<Venta, Double> columnaTotal;
+    @FXML private TableColumn<Venta, LocalDate> columnaFecha;
+    @FXML private TableColumn<Venta, String> columnaEstado;
+
+    // =========================
+    // TABLA PRODUCTOS
+    // =========================
+    @FXML private TableView<DetalleV> tablaProductos;
+    @FXML private TableColumn<DetalleV, Integer> columnaIdProd;
+    @FXML private TableColumn<DetalleV, Integer> columnaCantidad;
+    @FXML private TableColumn<DetalleV, Double> columnaSubtotal;
+
+    // =========================
+    // BOTONES GENERALES
+    // =========================
+    @FXML private Button btnRegistrar;
+    @FXML private Button btnCancelar;
+    @FXML private Button btnVerVenta;
+    @FXML private Button btnRegreso;
+    
+    // =========================
+    // ETIQUETA
+    // =========================
+
+    @FXML private Label et_total;
 
     @FXML
-    private TextField txtCantidad;
+    public void initialize() {
 
-    @FXML
-    private Button btnRegistrar;
-
-    @FXML
-    private Button btnCancelar;
-
-    @FXML
-    private Button btnRegreso;
-
-    @FXML
-    private TableView<Venta> tabla;
-
-    @FXML
-    private TableColumn<Venta, Integer> columnaId;
-
-    @FXML
-    private TableColumn<Venta, Integer> columnaIdProducto;
-
-    @FXML
-    private TableColumn<Venta, Integer> columnaCantidad;
-
-    @FXML
-    private TableColumn<Venta, Double> columnaPrecio;
-
-    @FXML
-    private TableColumn<Venta, Double> columnaTotal;
-
-    @FXML
-    private TableColumn<Venta, LocalDate> columnaFecha;
-
-    @FXML
-    private TableColumn<Venta, String> columnaEstado;
-
-
-       
-    /**
-     * Inicializa el controlador.
-     *
-     * @throws SQLException Si ocurre un error al conectar con la base de datos.
-     */
-    @FXML
-    public void initialize() throws SQLException {
         dbVenta = new SQLVenta();
 
+        // Configurar tabla ventas
         columnaId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        columnaIdProducto.setCellValueFactory(new PropertyValueFactory<>("productoId"));
-        columnaCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
-        columnaPrecio.setCellValueFactory(new PropertyValueFactory<>("precioUnidad"));
         columnaTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
         columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         columnaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
-        this.cargarDatos();
+        // Configurar tabla productos
+        columnaIdProd.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
+        columnaCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        columnaSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
+
+
+        cargarDatos();
     }
 
+    // ===================================
+    // AGREGAR PRODUCTO A LA LISTA
+    // ===================================
+    @FXML
+    private void agregarProducto() {
+        try {
+            int idProducto = Integer.parseInt(txtIdProducto.getText().trim());
+            int cantidad = Integer.parseInt(txtCantidad.getText().trim());
+
+            if (idProducto <= 0 || cantidad <= 0)
+                throw new IllegalArgumentException("Valores deben ser mayores a 0");
+
+            Double subtotal = dbVenta.obtenerSubtotal(idProducto, cantidad);
+            
+            // Subtotal temporal en 0 (lo calcula la BD al registrar)
+            DetalleV detalle = new DetalleV(0, idProducto, cantidad, subtotal);
+
+            List<DetalleV> lista = this.tablaProductos.getItems();
+            
+            for (DetalleV detalle_aux : lista){
+                if (detalle_aux.getIdProducto() == detalle.getIdProducto()){
+                    throw new Exception ("El producto ya esta agregado");
+                }
+            }
+
+            tablaProductos.getItems().add(detalle);
+            Double total = 0.0;
+            for (DetalleV detalle_aux : lista){
+                total += detalle_aux.getSubtotal();
+            }
+            this.et_total.setText(String.valueOf(total));
+            
+            txtIdProducto.clear();
+            txtCantidad.clear();
+
+        } catch (Exception e) {
+            mostrarAlerta(e.getMessage());
+        }
+    }
+
+    // ===================================
+    // ELIMINAR PRODUCTO
+    // ===================================
+    @FXML
+    private void eliminarProducto() {
+        DetalleV seleccionado = tablaProductos.getSelectionModel().getSelectedItem();
+
+        if (seleccionado != null) {
+            tablaProductos.getItems().remove(seleccionado);
+        } else {
+            mostrarAlerta("Seleccione un producto para eliminar");
+        }
+    }
+
+    // ===================================
+    // REGISTRAR VENTA
+    // ===================================
     @FXML
     private void agregarVenta() {
+        if (this.tablaProductos.getItems().isEmpty()) {
+            mostrarAlerta("Debe agregar al menos un producto");
+            return;
+        }
+
         try {
-            if (!this.validarCamposIngreso()) {
-                throw new Exception("Todos los campos deben estar llenos");
+            if (tablaProductos.getItems().isEmpty()) {
+                mostrarAlerta("No existen productos agregados");
             }
-            
-            int idProducto = this.validarNumeroPositivoEntero(txtIdProducto.getText().trim());
-            int cantidad = this.validarNumeroPositivoEntero(txtCantidad.getText().trim());
 
-            if (this.dbVenta.agregarVenta(idProducto, cantidad)) {
-                this.mostrarAlerta("Venta Exitosa");
+            Double total = Double.valueOf(this.et_total.getText());
 
-                txtIdProducto.clear();
-                txtCantidad.clear();
+            if (this.dbVenta.agregarVenta(total, tablaProductos.getItems())) {
+
+                mostrarAlerta("Venta registrada correctamente");
                 
-                this.cargarDatos();
-            } else {
-                this.mostrarAlerta("ERROR- No se pudo realizar la Venta");
+                tablaProductos.getItems().clear();
+                cargarDatos();
             }
 
         } catch (Exception e) {
-            this.mostrarAlerta(e.getMessage());
+            mostrarAlerta(e.getMessage());
         }
     }
 
+    // ===================================
+    // CANCELAR VENTA
+    // ===================================
     @FXML
     private void cancelarVenta() {
-        // Obtiene el item seleccionado
-        Venta ventaSeleccionada = tabla.getSelectionModel().getSelectedItem();
+        Venta ventaSeleccionada = tablaVentas.getSelectionModel().getSelectedItem();
 
-        if (ventaSeleccionada != null) {
-            int idVenta = ventaSeleccionada.getId();
-
-            // Confirmación antes de borrar
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                    "¿Seguro que quieres cancelar esta venta?", ButtonType.YES, ButtonType.NO);
-            confirm.showAndWait();
-
-            if (confirm.getResult() == ButtonType.YES) {
-                try {
-                    if (this.dbVenta.cancelarVenta(idVenta)) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                                "Venta cancelada correctamente", ButtonType.OK);
-                        alert.showAndWait();
-                        this.cargarDatos();
-                    } else {
-                        throw new Exception("Error no se pudo Cancelar");
-                    }
-
-                } catch (Exception e) {
-                    this.mostrarAlerta(e.getMessage());
-                }
-            }
-        } else {
-            this.mostrarAlerta("Seleccione una venta para cancelar");
+        if (ventaSeleccionada == null) {
+            mostrarAlerta("Seleccione una venta");
         }
+
+        try {
+            if (dbVenta.cancelarVenta(ventaSeleccionada.getId())) {
+                cargarDatos();
+            } 
+
+        } catch (Exception e) {
+            mostrarAlerta(e.getMessage());
+        }
+
     }
 
+    // ===================================
+    // VER DETALLES
+    // ===================================
+    @FXML
+    private void mostrarDetalles() throws IOException {
+
+        Venta ventaSeleccionada = tablaVentas.getSelectionModel().getSelectedItem();
+
+        if (ventaSeleccionada == null) {
+            mostrarAlerta("Seleccione una venta");
+            return;
+        }
+
+        // Cargar FXML
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/ventaInfo.fxml")
+        );
+
+        Session.setId_Venta(ventaSeleccionada.getId());
+        Session.setConnection(this.dbVenta.getConnection());
+        Parent root = loader.load();
+
+        // Crear nueva ventana
+        Stage nuevaVentana = new Stage();
+        nuevaVentana.setTitle("Detalle de Venta");
+
+        nuevaVentana.setScene(new Scene(root));
+        nuevaVentana.setResizable(false);
+
+        // Hace que se abra encima de la actual
+        nuevaVentana.initOwner(btnRegreso.getScene().getWindow());
+
+        //  Bloquea la ventana anterior hasta cerrar esta
+        nuevaVentana.initModality(Modality.WINDOW_MODAL);
+
+        nuevaVentana.show();
+    }
+
+    // ===================================
+    // REGRESO
+    // ===================================
     @FXML
     private void regreso() throws IOException {
-        // Nombre del FXML de la ventana anterior
-        String fxml = Session.getRol(); 
 
+        String fxml = Session.getRol();
         // Cargar el archivo FXML desde recursos
-        File fxmlFile = new File("src/main/resources/scenes/" + fxml + ".fxml");
-        Parent root = FXMLLoader.load(fxmlFile.toURI().toURL());
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/scenes/" + fxml + ".fxml")
+        );
+        Parent root = loader.load();
 
-        // Obtener la ventana actual
         Stage stage = (Stage) btnRegreso.getScene().getWindow();
-
-        // Cambiar la escena
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.sizeToScene();
-        stage.setResizable(false);
+        stage.setScene(new Scene(root));
         stage.show();
     }
 
-    // =======================
-    // MÉTODOS DE VALIDACION
-    // =======================
-    /**
-     * Verifica si los campos para ingresar un medicamento están llenos.
-     *
-     * @return {@code true} si todos campos contienen texto, {@code false} en
-     * caso contrario.
-     */
-    private boolean validarCamposIngreso() {
-        return !this.txtIdProducto.getText().trim().isEmpty()
-                && !this.txtCantidad.getText().trim().isEmpty();
-    }
-
-    /**
-     * Convierte un texto en un número de tipo Entero y verifica que sea
-     * positivo. Lanza excepciones específicas según el tipo de error:
-     *
-     * NumberFormatException si el texto no es un número válido.
-     * IllegalArgumentException si el número es menor o igual a cero.
-     *
-     * @param texto El texto que se desea validar y convertir.
-     * @return El valor numérico convertido a Entero si es mayor que cero.
-     * @throws NumberFormatException si el texto no representa un número válido.
-     * @throws IllegalArgumentException si el número es menor o igual a cero.
-     */
-    private Integer validarNumeroPositivoEntero(String texto) {
-        Integer valor;
+    // ===================================
+    // CARGAR DATOS VENTAS
+    // ===================================
+    private void cargarDatos() {
         try {
-            valor = Integer.parseInt(texto.trim());
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Ingrese un número válido");
+            List<Venta> ventas = dbVenta.cargarVentas();
+            tablaVentas.setItems(FXCollections.observableArrayList(ventas));
+        } catch (Exception e) {
+            mostrarAlerta(e.getMessage());
         }
-
-        if (valor <= 0) {
-            throw new IllegalArgumentException("El número debe ser mayor que cero");
-        }
-
-        return valor;
     }
 
-    /**
-     * Muestra una alerta de advertencia con un mensaje específico.
-     *
-     * @param mensaje El mensaje que se mostrará en la alerta.
-     */
+    // ===================================
+    // ALERTA
+    // ===================================
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("AVISO");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
-        Stage stage = (Stage) this.txtIdProducto.getScene().getWindow();
-        alert.initOwner(stage); // Establecer como ventana padre
         alert.showAndWait();
-    }
-
-    private void cargarDatos() {
-        try {
-            // 1. Obtener los medicamentos desde la BD
-            List<Venta> ventas = this.dbVenta.cargarVentas();
-
-            // 3. Crear un ObservableList y asignarlo a la tabla
-            tabla.setItems(FXCollections.observableArrayList(ventas));
-
-        } catch (Exception e) {
-            this.mostrarAlerta("ERROR Carga de datos: " + e.getMessage());
-        }
     }
 }
