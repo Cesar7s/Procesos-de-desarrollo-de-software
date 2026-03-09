@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="346.0" prefWidth="444.0" style="-fx-background-color: #badeea;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.pharma.controllers.MenuUserController">
+   <children>
+      <ImageView fitHeight="114.0" fitWidth="142.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@/images/logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="164.0" layoutY="14.0" prefHeight="27.0" prefWidth="109.0" style="-fx-background-color: #208acb;" text="Bienvenid@">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="etUsuario" layoutX="296.0" layoutY="14.0" prefHeight="27.0" prefWidth="142.0" style="-fx-background-color: #208acb;">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnVentas" layoutX="96.0" layoutY="251.0" mnemonicParsing="false" onAction="#switchVentas" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: #208acb; -fx-background-radius: 12;" text="Ventas">
+         <font>
+            <Font name="Bodoni MT" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnAlmacen" layoutX="245.0" layoutY="251.0" mnemonicParsing="false" onAction="#switchAlmacen" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: #208acb; -fx-background-radius: 12;" text="Almacen">
+         <font>
+            <Font name="Bodoni MT" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnRegreso" layoutX="14.0" layoutY="293.0" mnemonicParsing="false" onAction="#regreso" prefHeight="55.0" prefWidth="73.0" style="-fx-background-radius: 12;">
+          <graphic>
+              <ImageView fitHeight="40" fitWidth="40">
+                  <image>
+                      <Image url="@/images/regreso.png" />
+                  </image>
+              </ImageView>
+          </graphic>
+      </Button>
+      <ImageView fitHeight="103.0" fitWidth="130.0" layoutX="96.0" layoutY="145.0" pickOnBounds="true" preserveRatio="true">
+          <image>
+              <Image url="@/images/carro.png" />
+          </image>
+      </ImageView>
+      <ImageView fitHeight="103.0" fitWidth="130.0" layoutX="245.0" layoutY="148.0" pickOnBounds="true" preserveRatio="true">
+          <image>
+              <Image url="@/images/farmaco.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
